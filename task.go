@@ -2,6 +2,7 @@ package grsync
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"math"
 	"strconv"
@@ -47,13 +48,13 @@ func (t Task) Log() Log {
 func (t *Task) Run() error {
 	stderr, err := t.rsync.StderrPipe()
 	if err != nil {
-		return err
+		return fmt.Errorf("grsync: unable to get stderr pipe: %w", err)
 	}
 	defer stderr.Close()
 
 	stdout, err := t.rsync.StdoutPipe()
 	if err != nil {
-		return err
+		return fmt.Errorf("grsync: unable to get stdout pipe: %w", err)
 	}
 	defer stdout.Close()
 

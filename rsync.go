@@ -206,12 +206,12 @@ func (r Rsync) Run() error {
 	// only create dir if this is a local address
 	if !strings.Contains(r.Destination, ":") && !isExist(r.Destination) {
 		if err := createDir(r.Destination); err != nil {
-			return err
+			return fmt.Errorf("grsync: unable to create destination dir: %w", err)
 		}
 	}
 
 	if err := r.cmd.Start(); err != nil {
-		return err
+		return fmt.Errorf("grsync: error running rsync: %w", err)
 	}
 
 	return r.cmd.Wait()
@@ -567,7 +567,7 @@ func getArguments(options RsyncOptions) []string {
 func createDir(dir string) error {
 	cmd := exec.Command("mkdir", "-p", dir)
 	if err := cmd.Start(); err != nil {
-		return err
+		return fmt.Errorf("unable to create dir %s: %w", dir, err)
 	}
 	return cmd.Wait()
 }
