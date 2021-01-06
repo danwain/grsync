@@ -203,7 +203,8 @@ func (r Rsync) StderrPipe() (io.ReadCloser, error) {
 
 // Run start rsync task
 func (r Rsync) Run() error {
-	if !isExist(r.Destination) {
+	// only create dir if this is a local address
+	if !strings.Contains(r.Destination, ":") && !isExist(r.Destination) {
 		if err := createDir(r.Destination); err != nil {
 			return err
 		}
